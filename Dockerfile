@@ -46,4 +46,4 @@ USER 1001
 
 EXPOSE 8181 8282
 
-CMD ["/usr/local/bin/java","-jar","/deployments/app.jar"]
+CMD ["/usr/bin/java","-jar","/deployments/app.jar"]
