@@ -1,4 +1,4 @@
-FROM alpine:3.23.4 as build
+FROM docker.io/library/alpine:3.23.4 as build
 
 WORKDIR /home/app
 
@@ -15,7 +15,7 @@ RUN wget -q -O /tmp/maven.zip https://dlcdn.apache.org/maven/maven-3/${MAVEN_VER
  && rm -Rf /tmp/apache-maven-${MAVEN_VERSION}/ \
  && /usr/local/maven/bin/mvn -s /home/app/settings.xml -f /home/app/pom.xml package -DskipTests
 
-FROM alpine:3.23.4
+FROM docker.io/library/alpine:3.23.4
 
 ENV TZ=BRT+3
 
@@ -35,7 +35,7 @@ LABEL\
 
 RUN apk add --update openjdk21-jdk
 
-COPY --from=build --chown=1001:0 /home/app/target/*-runner.jar /app/app.jar
+COPY --from=build /home/app/target/*-runner.jar /app/app.jar
 
 USER 1001
 
