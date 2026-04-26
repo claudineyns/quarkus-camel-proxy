@@ -1,5 +1,14 @@
+# Editor
+
+.vscode/
+.claude/
+
+# Environment
+.env
+
 # Compiled class file
 *.class
+target/
 
 # Log file
 *.log
