@@ -1,8 +1,10 @@
-FROM docker.io/library/alpine:3.23.4 as build
+FROM alpine:3.23.4 as build
 
 WORKDIR /home/app
 
-COPY . /home/app
+COPY src /home/app/
+COPY pom.xml /home/app/
+COPY settings.xml /home/app/
 
 RUN apk add --update wget zip openjdk21-jdk
 
@@ -16,7 +18,7 @@ RUN wget -q -O /tmp/maven.zip https://dlcdn.apache.org/maven/maven-3/${MAVEN_VER
  && /usr/local/maven/bin/mvn -s /home/app/settings.xml -f /home/app/pom.xml package -DskipTests \
  && rm -fr ~/.m2/repository
 
-FROM docker.io/library/alpine:3.23.4
+FROM eclipse-temurin:21-ubi10-minimal
 
 ENV TZ=BRT+3
 
@@ -34,13 +36,10 @@ LABEL\
  io.k8s.description="Proxy HTTP/HTTPS para APIs REST"\
  io.k8s.display-name="Proxy API"
 
-RUN apk add --update openjdk21-jdk
-
-COPY --from=build /home/app/target/*-runner.jar /app/app.jar
+COPY --from=build /home/app/target/*-runner.jar /deployments/app.jar
 
 USER 1001
 
-EXPOSE 8181
-EXPOSE 8282
+EXPOSE 8181 8282
 
-CMD ["/usr/bin/java", "-jar", "/app/app.jar"]
+CMD ["java","-jar","/deployments/app.jar"]
