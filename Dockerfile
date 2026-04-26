@@ -18,7 +18,9 @@ RUN wget -q -O /tmp/maven.zip https://dlcdn.apache.org/maven/maven-3/${MAVEN_VER
  && /usr/local/maven/bin/mvn -s /home/app/settings.xml -f /home/app/pom.xml package -DskipTests -Dquarkus.package.jar.type=uber-jar \
  && rm -fr ~/.m2/repository
 
-FROM eclipse-temurin:21-ubi10-minimal
+FROM alpine:3.23.4
+
+WORKDIR /deployments
 
 ENV TZ=BRT+3
 
@@ -36,10 +38,12 @@ LABEL\
  io.k8s.description="Proxy HTTP/HTTPS para APIs REST"\
  io.k8s.display-name="Proxy API"
 
+RUN apk add --update openjdk21-jdk
+
 COPY --from=build /home/app/target/*-runner.jar /deployments/app.jar
 
 USER 1001
 
 EXPOSE 8181 8282
 
-CMD ["java","-jar","/deployments/app.jar"]
+CMD ["/usr/local/bin/java","-jar","/deployments/app.jar"]
