@@ -13,7 +13,8 @@ RUN wget -q -O /tmp/maven.zip https://dlcdn.apache.org/maven/maven-3/${MAVEN_VER
  && mkdir -p /usr/local/maven/ \
  && mv /tmp/apache-maven-${MAVEN_VERSION}/* /usr/local/maven/ \
  && rm -Rf /tmp/apache-maven-${MAVEN_VERSION}/ \
- && /usr/local/maven/bin/mvn -s /home/app/settings.xml -f /home/app/pom.xml package -DskipTests
+ && /usr/local/maven/bin/mvn -s /home/app/settings.xml -f /home/app/pom.xml package -DskipTests \
+ && rm -fr ~/.m2/repository
 
 FROM docker.io/library/alpine:3.23.4
 
