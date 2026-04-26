@@ -2,7 +2,7 @@ FROM alpine:3.23.4 as build
 
 WORKDIR /home/app
 
-COPY src /home/app/
+COPY src /home/app/src
 COPY pom.xml /home/app/
 COPY settings.xml /home/app/
 
